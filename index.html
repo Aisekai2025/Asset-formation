@@ -62,19 +62,32 @@
                 計算中...
             </div>
 
-            <!-- 免責事項（アコーディオン形式） -->
-            <details class="text-[9px] text-slate-400 border-t pt-4">
-                <summary class="cursor-pointer font-bold mb-2">【免責事項（必ずお読みください）】</summary>
-                <p class="mt-1">
-                    本シミュレーターは、2026年時点の概算社会保険料率および一般的な統計データに基づいた簡易予測ツールです。算出結果は将来の運用成果や健康状態を保証するものではありません。
-                </p>
-                <ul class="list-disc pl-4 mt-1 space-y-1">
-                    <li>本結果は投資助言ではなく、特定の金融商品の勧誘を目的としたものではありません。</li>
-                    <li>健康スコアは生活習慣の傾向を示すものであり、医学的診断に代わるものではありません。</li>
-                    <li>資産運用や健康管理の最終判断は、ご自身の責任において専門家へ相談の上行ってください。</li>
-                </ul>
-            </details>
+            <!-- 修正後の「誠実なガイドライン」セクション -->
+<div class="mt-8 p-6 bg-slate-50 rounded-[2rem] border-2 border-indigo-100">
+    <h2 class="text-sm font-black text-indigo-900 mb-3 flex items-center">
+        <span class="mr-2">⚖️</span> 誠実なシミュレーションのために
+    </h2>
+    <div class="space-y-4 text-[11px] leading-relaxed text-slate-600">
+        <p>
+            本アプリは、2026年の日本で「お金」と「健康」のバランスを最適化することを目的に設計されました。私たちは、以下のポリシーに基づき情報を開示します。
+        </p>
+        
+        <div class="bg-white p-3 rounded-xl shadow-sm">
+            <p class="font-bold text-slate-800 mb-1">【資産計算の根拠】</p>
+            <p>2026年度の社会保険料率（子ども・子育て支援金等を含む）に基づき、額面の約78%を手取りとして試算。利回りは新NISAを想定し年利5%で計算していますが、元本を保証するものではありません。</p>
         </div>
+
+        <div class="bg-white p-3 rounded-xl shadow-sm border-l-4 border-emerald-500">
+            <p class="font-bold text-slate-800 mb-1">【健康寿命と医療費リスク】</p>
+            <p>管理栄養士の知見に基づき、店舗形態による栄養価の偏りをスコア化。過度な節約による栄養不足は、将来的に資産を上回る「医療費負担」を招くリスクとして減点表示しています。</p>
+        </div>
+
+        <p class="text-[10px] text-slate-400 italic">
+            ※最終的な投資判断や健康管理は、ご自身の責任において専門家（FP、医師等）にご相談ください。
+        </p>
+    </div>
+</div>
+
 
         <div class="bg-slate-50 py-4 text-center">
             <p class="text-[9px] text-slate-300 font-bold">© 2026 LifeNavigator Project</p>
