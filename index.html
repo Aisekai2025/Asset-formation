@@ -3,94 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeNavigator 2026 | 資産形成×健康寿命シミュレーター</title>
+    <title>LifeNavigator 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-        .risk-mode { background-color: #ef4444 !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #4f46e5; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .risk-alert { background-color: #ef4444 !important; animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        /* モーダル表示用 */
+        #modal:target { display: flex; }
     </style>
 </head>
-<body class="bg-gray-100 text-slate-900 font-sans p-4 sm:p-8">
+<body class="bg-slate-100 text-slate-900 font-sans p-2 sm:p-4">
 
-    <div class="max-w-md mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-white relative">
-        <!-- ヘッダー -->
-        <div class="bg-indigo-700 p-8 text-white text-center">
-            <h1 class="text-2xl font-black tracking-tight">LifeNavigator 2026</h1>
-            <p class="text-[10px] opacity-70 mt-1 uppercase tracking-widest font-bold">Wealth & Health Integration Engine</p>
+    <div class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white flex flex-col h-[92vh] sm:h-auto">
+        
+        <!-- ヘッダー：コンパクト化 -->
+        <div class="bg-indigo-700 p-4 text-white text-center">
+            <h1 class="text-lg font-black tracking-tight">LifeNavigator 2026</h1>
         </div>
 
-        <div class="p-6 space-y-8">
-            <!-- 入力セクション -->
-            <div class="space-y-6">
-                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">月収（支給額）: <span class="text-lg text-indigo-600"><span id="val-income">30</span>万円</span></label>
-                    <input type="range" id="input-income" min="15" max="120" value="30" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
+        <div class="p-5 space-y-4 overflow-y-auto flex-1">
+            <!-- 入力：さらに直感的に -->
+            <div class="space-y-3">
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                    <label class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">月収: <span class="text-base text-indigo-600 font-black"><span id="val-income">30</span>万円</span></label>
+                    <input type="range" id="input-income" min="15" max="100" value="30" class="w-full h-1.5 bg-indigo-100 rounded-lg appearance-none" oninput="calculate()">
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">生活・店舗スタイル: <span id="label-store" class="text-sm text-indigo-600">自炊派（スーパー）</span></label>
-                    <input type="range" id="input-store" min="0" max="2" value="0" step="1" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                    <label class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">店舗: <span id="label-store" class="text-xs text-indigo-600 font-bold">自炊派</span></label>
+                    <input type="range" id="input-store" min="0" max="2" value="0" step="1" class="w-full h-1.5 bg-indigo-100 rounded-lg appearance-none" oninput="calculate()">
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">投資・貯蓄率（NISA等）: <span class="text-lg text-indigo-600"><span id="val-invest">15</span>%</span></label>
-                    <input type="range" id="input-invest" min="0" max="60" value="15" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                    <label class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">投資率: <span class="text-base text-indigo-600 font-black"><span id="val-invest">15</span>%</span></label>
+                    <input type="range" id="input-invest" min="0" max="50" value="15" class="w-full h-1.5 bg-indigo-100 rounded-lg appearance-none" oninput="calculate()">
                 </div>
             </div>
 
-            <!-- 結果パネル -->
-            <div class="grid grid-cols-2 gap-4">
-                <div id="card-assets" class="bg-slate-900 p-5 rounded-[2rem] text-white transition-all duration-500">
-                    <p class="text-[9px] opacity-60 font-bold tracking-widest">10年後の実質資産</p>
-                    <p class="text-2xl font-black mt-1" id="res-assets">¥0</p>
+            <!-- 結果：視認性重視 -->
+            <div class="grid grid-cols-2 gap-3">
+                <div id="card-assets" class="bg-slate-900 p-4 rounded-2xl text-white transition-all duration-300">
+                    <p class="text-[8px] opacity-60 font-bold uppercase">10年後の資産</p>
+                    <p class="text-lg font-black" id="res-assets">¥0</p>
                 </div>
-                <div id="card-health" class="bg-emerald-500 p-5 rounded-[2rem] text-white transition-all duration-500">
-                    <p class="text-[9px] opacity-60 font-bold tracking-widest">健康寿命スコア</p>
-                    <p class="text-2xl font-black mt-1"><span id="res-health">85</span>点</p>
+                <div id="card-health" class="bg-emerald-500 p-4 rounded-2xl text-white transition-all duration-300">
+                    <p class="text-[8px] opacity-60 font-bold uppercase">健康寿命スコア</p>
+                    <p class="text-lg font-black"><span id="res-health">85</span>点</p>
                 </div>
             </div>
 
-            <!-- グラフ -->
-            <div class="h-44 w-full px-2">
+            <div class="h-32 w-full">
                 <canvas id="mainChart"></canvas>
             </div>
 
-            <!-- アドバイス -->
-            <div id="advice-box" class="text-xs p-5 rounded-3xl bg-indigo-50 border border-indigo-100 text-indigo-900 leading-relaxed font-medium">
-                計算中...
+            <div id="advice-box" class="text-[11px] p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-900 leading-snug shadow-inner font-bold">
+                スライダーを動かしてください
             </div>
 
-            <!-- 修正後の「誠実なガイドライン」セクション -->
-<div class="mt-8 p-6 bg-slate-50 rounded-[2rem] border-2 border-indigo-100">
-    <h2 class="text-sm font-black text-indigo-900 mb-3 flex items-center">
-        <span class="mr-2">⚖️</span> 誠実なシミュレーションのために
-    </h2>
-    <div class="space-y-4 text-[11px] leading-relaxed text-slate-600">
-        <p>
-            本アプリは、2026年の日本で「お金」と「健康」のバランスを最適化することを目的に設計されました。私たちは、以下のポリシーに基づき情報を開示します。
-        </p>
-        
-        <div class="bg-white p-3 rounded-xl shadow-sm">
-            <p class="font-bold text-slate-800 mb-1">【資産計算の根拠】</p>
-            <p>2026年度の社会保険料率（子ども・子育て支援金等を含む）に基づき、額面の約78%を手取りとして試算。利回りは新NISAを想定し年利5%で計算していますが、元本を保証するものではありません。</p>
+            <!-- 誠実な「必ずお読みください」ボタン -->
+            <div class="text-center pt-2">
+                <a href="#modal" class="inline-block text-[10px] font-bold text-indigo-500 border-b border-indigo-500 pb-0.5 hover:text-indigo-700 transition-colors">
+                    ⚠︎ ご利用前に「必ずお読みください」
+                </a>
+            </div>
         </div>
-
-        <div class="bg-white p-3 rounded-xl shadow-sm border-l-4 border-emerald-500">
-            <p class="font-bold text-slate-800 mb-1">【健康寿命と医療費リスク】</p>
-            <p>管理栄養士の知見に基づき、店舗形態による栄養価の偏りをスコア化。過度な節約による栄養不足は、将来的に資産を上回る「医療費負担」を招くリスクとして減点表示しています。</p>
-        </div>
-
-        <p class="text-[10px] text-slate-400 italic">
-            ※最終的な投資判断や健康管理は、ご自身の責任において専門家（FP、医師等）にご相談ください。
-        </p>
     </div>
-</div>
 
-
-        <div class="bg-slate-50 py-4 text-center">
-            <p class="text-[9px] text-slate-300 font-bold">© 2026 LifeNavigator Project</p>
+    <!-- モーダル：誠実な情報の隠し場所 -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity">
+        <div class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <h2 class="text-base font-black text-indigo-900 flex items-center">
+                <span class="mr-2">⚖️</span> 誠実なシミュレーションの根拠
+            </h2>
+            <div class="space-y-3 text-[11px] leading-relaxed text-slate-600 overflow-y-auto max-h-[60vh]">
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+                    <p class="font-bold text-indigo-900 mb-1 underline decoration-indigo-300 decoration-2">資産計算について</p>
+                    <p>[厚生労働省](https://www.mhlw.go.jp)の2026年想定社会保険料率および新NISA制度をベースに試算。利回り5%はあくまで理論値であり、元本保証はありません。</p>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                    <p class="font-bold text-emerald-900 mb-1 underline decoration-emerald-300 decoration-2">健康寿命について</p>
+                    <p>[農林水産省](https://www.maff.go.jp)の食事バランスガイドを参考に、店舗種別による栄養の偏りをスコア化。過度な節約によるリスクを可視化しています。</p>
+                </div>
+                <p class="text-[10px] bg-slate-100 p-2 rounded-lg font-bold">※本ツールは投資助言や医学的診断ではありません。最終判断は専門家へご相談ください。</p>
+            </div>
+            <a href="#" class="block w-full py-3 bg-indigo-600 text-white text-center rounded-xl font-bold text-xs shadow-lg active:scale-95 transition-transform">
+                確認しました
+            </a>
         </div>
     </div>
 
@@ -108,7 +108,7 @@
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.05)',
                         fill: true,
-                        borderWidth: 4,
+                        borderWidth: 3,
                         tension: 0.4,
                         pointRadius: 0
                     }]
@@ -117,10 +117,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { 
-                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } },
-                        y: { display: false, beginAtZero: true }
-                    }
+                    scales: { x: { display: false }, y: { display: false, beginAtZero: true } }
                 }
             });
         }
@@ -135,33 +132,28 @@
             
             const storeSettings = [
                 { name: "自炊派（スーパー）", cost: 3.5, health: 15 },
-                { name: "混合派（ドラッグストア等）", cost: 5.5, health: 5 },
+                { name: "混合派", cost: 5.5, health: 5 },
                 { name: "外食・コンビニ派", cost: 9.5, health: -15 }
             ];
             document.getElementById('label-store').innerText = storeSettings[storeMode].name;
 
-            const takeHome = income * 0.78; // 手取り（2026年推計）
-            const minLifeCost = 10; // 固定費（家賃等）
-            const maxInvestCapacity = takeHome - minLifeCost - storeSettings[storeMode].cost;
+            const takeHome = income * 0.78; 
+            const maxInvestCapacity = takeHome - 10 - storeSettings[storeMode].cost;
             const actualMonthlyInvest = income * investRate;
 
-            let healthPenalty = 0;
             let medicalDebt = 0;
-            let isRisk = false;
-
-            // 投資過多ペナルティロジック
+            let healthPenalty = 0;
             if (actualMonthlyInvest > maxInvestCapacity) {
-                isRisk = true;
                 const deficit = actualMonthlyInvest - maxInvestCapacity;
-                healthPenalty = deficit * 12; // 生活費不足によるダメージ
-                medicalDebt = deficit * 40; // 将来の医療費負債化
+                healthPenalty = deficit * 15;
+                medicalDebt = deficit * 50;
             }
 
             let assetsHistory = [];
             let currentBalance = 0;
             for (let i = 0; i <= 10; i++) {
                 if (i % 2 === 0) assetsHistory.push(Math.round(currentBalance));
-                currentBalance = (currentBalance + (actualMonthlyInvest * 12)) * 1.05; // 年利5%
+                currentBalance = (currentBalance + (actualMonthlyInvest * 12)) * 1.05;
             }
 
             const finalAssets = Math.max(0, Math.round(currentBalance - medicalDebt));
@@ -170,33 +162,27 @@
             document.getElementById('res-assets').innerText = "¥" + finalAssets.toLocaleString() + "万";
             document.getElementById('res-health').innerText = Math.round(finalHealth);
 
-            // アラート演出
             const cardAssets = document.getElementById('card-assets');
-            if (isRisk) {
-                cardAssets.classList.add('risk-mode');
+            if (actualMonthlyInvest > maxInvestCapacity) {
+                cardAssets.classList.add('risk-alert');
             } else {
-                cardAssets.classList.remove('risk-mode');
+                cardAssets.classList.remove('risk-alert');
             }
 
             const advice = document.getElementById('advice-box');
-            if (isRisk) {
-                advice.innerHTML = "🚨 <strong>警告: 投資のやりすぎです</strong><br>現在の投資率は生活を圧迫しています。健康を損なうと、将来的に約" + Math.round(medicalDebt) + "万円の医療費が発生するリスクがあります。";
-            } else if (storeMode === 2) {
-                advice.innerHTML = "⚠️ <strong>店舗戦略の見直しを</strong><br>コンビニ中心の生活は資産形成を月約6万円阻害しています。週3回スーパーに変えるだけで、10年後の資産はさらに伸びます。";
+            if (actualMonthlyInvest > maxInvestCapacity) {
+                advice.innerHTML = "🚨 <span class='text-red-600'>投資率を下げてください。</span>現在の設定は日々の生活費が不足し、将来の医療費リスクが膨らんでいます。";
             } else {
-                advice.innerHTML = "✨ <strong>理想的なバランスです</strong><br>2026年の厳しい経済下でも、健康と資産を両立できる最強の設定です。この習慣を継続しましょう！";
+                advice.innerHTML = "✨ 2026年を生き抜く「黄金比」です。このバランスなら、資産と健康を両立できます。";
             }
 
             if (mainChart) {
-                mainChart.data.datasets[0].data = assetsHistory;
+                mainChart.data.datasets.data = assetsHistory;
                 mainChart.update('none');
             }
         }
 
-        window.onload = () => {
-            initChart();
-            calculate();
-        };
+        window.onload = () => { initChart(); calculate(); };
     </script>
 </body>
 </html>
