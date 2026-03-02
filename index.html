@@ -3,163 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeNavigator 2026 - 資産・健康シミュレーター</title>
+    <title>LifeNavigator 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body class="bg-slate-50 text-slate-800 p-4">
+    <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl p-6 space-y-6">
+        <h1 class="text-xl font-bold text-indigo-700 text-center">LifeNavigator 2026</h1>
 
-    <div class="max-w-xl mx-auto min-h-screen flex flex-col p-4">
-        <!-- ヘッダー -->
-        <header class="py-6 text-center">
-            <h1 class="text-2xl font-bold text-indigo-700">LifeNavigator 2026</h1>
-            <p class="text-sm text-slate-500">資産と健康の最適バランスを算出</p>
-        </header>
-
-        <!-- メインカード -->
-        <main class="bg-white rounded-3xl shadow-xl p-6 space-y-8">
-            
-            <!-- スライダー入力エリア -->
-            <div class="space-y-6">
-                <div>
-                    <label class="flex justify-between text-sm font-medium mb-2">
-                        <span>月収（総支給額）</span>
-                        <span class="text-indigo-600 font-bold"><span id="val-income">30</span>万円</span>
-                    </label>
-                    <input type="range" id="input-income" min="15" max="100" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                </div>
-
-                <div>
-                    <label class="flex justify-between text-sm font-medium mb-2">
-                        <span>近隣店舗の利用スタイル</span>
-                        <span id="label-store" class="text-indigo-600 font-bold">自炊（スーパー中心）</span>
-                    </label>
-                    <input type="range" id="input-store" min="0" max="2" value="0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                    <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                        <span>スーパー/自炊</span>
-                        <span>ドラッグストア</span>
-                        <span>コンビニ/外食</span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="flex justify-between text-sm font-medium mb-2">
-                        <span>投資（NISA等）への回し設定</span>
-                        <span class="text-indigo-600 font-bold"><span id="val-invest">10</span>%</span>
-                    </label>
-                    <input type="range" id="input-invest" min="0" max="50" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                </div>
+        <!-- 入力エリア -->
+        <div class="space-y-4">
+            <div>
+                <label class="flex justify-between text-sm mb-1">月収: <span id="val-income" class="font-bold">30</span>万円</label>
+                <input type="range" id="input-income" min="15" max="100" value="30" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
             </div>
-
-            <hr class="border-slate-100">
-
-            <!-- 結果表示エリア -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-indigo-50 p-4 rounded-2xl">
-                    <p class="text-[10px] text-indigo-600 uppercase font-bold">10年後の資産増</p>
-                    <p class="text-xl font-black text-indigo-900">¥<span id="res-assets">0</span></p>
-                </div>
-                <div id="health-card" class="bg-emerald-50 p-4 rounded-2xl">
-                    <p class="text-[10px] text-emerald-600 uppercase font-bold">推定健康寿命</p>
-                    <p class="text-xl font-black text-emerald-900"><span id="res-health">0</span>歳</p>
-                </div>
+            <div>
+                <label class="flex justify-between text-sm mb-1">スタイル: <span id="label-store" class="font-bold text-indigo-600">自炊派</span></label>
+                <input type="range" id="input-store" min="0" max="2" value="0" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
             </div>
-
-            <!-- グラフ -->
-            <div class="h-48">
-                <canvas id="growthChart"></canvas>
+            <div>
+                <label class="flex justify-between text-sm mb-1">投資率: <span id="val-invest" class="font-bold">10</span>%</label>
+                <input type="range" id="input-invest" min="0" max="50" value="10" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
             </div>
+        </div>
 
-            <!-- アドバイス -->
-            <div id="advice-box" class="text-sm bg-slate-800 text-white p-4 rounded-2xl">
-                Loading advice...
+        <!-- 結果エリア -->
+        <div class="grid grid-cols-2 gap-4 text-center">
+            <div class="bg-indigo-50 p-3 rounded-xl">
+                <p class="text-[10px] text-indigo-600 font-bold">10年後の資産</p>
+                <p class="text-lg font-black" id="res-assets">¥0</p>
             </div>
-        </main>
+            <div class="bg-emerald-50 p-3 rounded-xl">
+                <p class="text-[10px] text-emerald-600 font-bold">健康寿命スコア</p>
+                <p class="text-lg font-black" id="res-health">0</p>
+            </div>
+        </div>
 
-        <footer class="mt-auto py-6 text-center text-[10px] text-slate-400">
-            ※2026年度税制・社会保険料率(概算)に基づくシミュレーション
-        </footer>
+        <!-- グラフエリア -->
+        <div style="height: 200px; position: relative;">
+            <canvas id="growthChart"></canvas>
+        </div>
+
+        <div id="advice-box" class="text-xs p-4 rounded-xl bg-slate-800 text-white leading-relaxed">
+            計算中...
+        </div>
     </div>
 
     <script>
-        // グラフの初期化
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        let growthChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array.from({length: 11}, (_, i) => i + '年後'),
-                datasets: [{
-                    label: '予測資産残高',
-                    data: [],
-                    borderColor: '#4f46e5',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
+        let growthChart = null;
 
-        // ロジック関数
+        function initChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['今', '2年', '4年', '6年', '8年', '10年'],
+                    datasets: [{
+                        label: '資産推移',
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
         function update() {
+            if (!growthChart) return;
+
+            // 値の取得
             const income = parseInt(document.getElementById('input-income').value);
             const storeMode = parseInt(document.getElementById('input-store').value);
             const investRate = parseInt(document.getElementById('input-invest').value) / 100;
 
-            // 1. FPロジック: 手取り計算（2026年想定：社保+税で約25%負担と仮定）
-            const takeHome = income * 0.75;
-            
-            // 2. 管理栄養士ロジック: 生活コストと健康影響
-            let storeCost = 0;
-            let healthImpact = 0;
-            let storeLabel = "";
-            
-            if(storeMode == 0) {
-                storeCost = 4; storeLabel = "自炊（スーパー中心）"; healthImpact = 2;
-            } else if(storeMode == 1) {
-                storeCost = 6; storeLabel = "ドラッグストア併用"; healthImpact = 0;
-            } else {
-                storeCost = 9; storeLabel = "コンビニ・外食中心"; healthImpact = -3;
-            }
-
-            // 3. 資産形成シミュレーション (年利5%想定)
-            const monthlyInvest = takeHome * investRate;
-            const remainingCash = takeHome - storeCost - monthlyInvest;
-            
-            let assetsData = [];
-            let currentAssets = 0;
-            for(let i=0; i<=10; i++) {
-                assetsData.push(Math.round(currentAssets));
-                currentAssets = (currentAssets + (monthlyInvest * 12)) * 1.05;
-            }
-
-            // UI更新
+            // 表示更新
             document.getElementById('val-income').innerText = income;
-            document.getElementById('label-store').innerText = storeLabel;
             document.getElementById('val-invest').innerText = Math.round(investRate * 100);
-            document.getElementById('res-assets').innerText = assetsData[10].toLocaleString() + "万";
-            
-            const baseHealth = 75;
-            const finalHealth = baseHealth + healthImpact;
-            document.getElementById('res-health').innerText = finalHealth;
 
-            // アドバイス生成
-            const adviceBox = document.getElementById('advice-box');
-            if(storeMode == 2 && investRate < 0.1) {
-                adviceBox.innerText = "⚠️ コンビニ利用が資産と健康の両方を圧迫しています。週2回スーパーに変えるだけで、10年後の資産が約150万円変わる可能性があります。";
-                adviceBox.className = "text-sm bg-red-800 text-white p-4 rounded-2xl";
-            } else {
-                adviceBox.innerText = "✅ 理想的なバランスです。近隣のスーパーを拠点に、今の積立ペースを維持しましょう。";
-                adviceBox.className = "text-sm bg-slate-800 text-white p-4 rounded-2xl";
+            // 1. FPロジック
+            const takeHome = income * 0.8; // 手取り約8割と仮定
+            let storeCost = [5, 8, 12][storeMode]; // 万
+            let storeLabel = ["自炊派", "混合派", "外食・コンビニ派"][storeMode];
+            document.getElementById('label-store').innerText = storeLabel;
+
+            // 2. 資産計算
+            const monthlyInvest = takeHome * investRate;
+            let currentAssets = 0;
+            let chartData = [];
+            for (let i = 0; i <= 10; i++) {
+                if (i % 2 === 0) chartData.push(Math.round(currentAssets));
+                currentAssets = (currentAssets + (monthlyInvest * 12)) * 1.05; // 年利5%
             }
 
-            growthChart.data.datasets[0].data = assetsData;
+            // 3. UI反映
+            document.getElementById('res-assets').innerText = "¥" + Math.round(currentAssets).toLocaleString() + "万";
+            document.getElementById('res-health').innerText = [82, 79, 74][storeMode] + " 歳";
+
+            // グラフ更新
+            growthChart.data.datasets[0].data = chartData;
             growthChart.update();
+
+            // アドバイス
+            const advice = document.getElementById('advice-box');
+            if(storeMode === 2) {
+                advice.innerText = "⚠️コンビニ中心だと食費が月約" + storeCost + "万円かかり、健康寿命も低下傾向です。週2回自炊にするだけで投資余力が生まれます。";
+            } else {
+                advice.innerText = "✅効率的な資産形成です。このペースを維持すれば、10年後には強力なセーフティネットが完成します。";
+            }
         }
 
-        // イベントリスナー
-        document.querySelectorAll('input').forEach(el => el.addEventListener('input', update));
-        update(); // 初回実行
+        // 初期化
+        window.onload = () => {
+            initChart();
+            update();
+        };
     </script>
 </body>
 </html>
