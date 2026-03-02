@@ -3,82 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeNavigator 2026 - 資産・健康統合シミュレーター</title>
+    <title>LifeNavigator 2026 | 資産形成×健康寿命シミュレーター</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-        .risk-flash { animation: flash 1s infinite; }
-        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .risk-mode { background-color: #ef4444 !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900 font-sans antialiased p-4">
+<body class="bg-gray-100 text-slate-900 font-sans p-4 sm:p-8">
 
-    <div class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white">
+    <div class="max-w-md mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-white relative">
         <!-- ヘッダー -->
-        <div class="bg-indigo-700 p-6 text-white text-center">
-            <h1 class="text-xl font-black tracking-tighter">LifeNavigator 2026</h1>
-            <p class="text-[10px] opacity-80 mt-1">資産形成 × 健康維持 トレードオフ・エンジン</p>
+        <div class="bg-indigo-700 p-8 text-white text-center">
+            <h1 class="text-2xl font-black tracking-tight">LifeNavigator 2026</h1>
+            <p class="text-[10px] opacity-70 mt-1 uppercase tracking-widest font-bold">Wealth & Health Integration Engine</p>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="p-6 space-y-8">
             <!-- 入力セクション -->
-            <div class="space-y-5">
-                <div class="space-y-2">
-                    <div class="flex justify-between items-end text-xs font-bold text-slate-500">
-                        <span>月収（総支給）</span>
-                        <span class="text-xl text-indigo-600"><span id="val-income">30</span><span class="text-xs ml-1">万円</span></span>
-                    </div>
-                    <input type="range" id="input-income" min="15" max="120" value="30" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none" oninput="calculate()">
+            <div class="space-y-6">
+                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
+                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">月収（支給額）: <span class="text-lg text-indigo-600"><span id="val-income">30</span>万円</span></label>
+                    <input type="range" id="input-income" min="15" max="120" value="30" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
                 </div>
 
-                <div class="space-y-2">
-                    <div class="flex justify-between items-end text-xs font-bold text-slate-500">
-                        <span>店舗・食生活</span>
-                        <span id="label-store" class="text-sm text-indigo-600">自炊中心（スーパー）</span>
-                    </div>
-                    <input type="range" id="input-store" min="0" max="2" value="0" step="1" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none" oninput="calculate()">
-                    <div class="flex justify-between text-[8px] text-slate-400 px-1 font-bold">
-                        <span>高栄養/低コスト</span>
-                        <span>利便性重視</span>
-                        <span>高コスト/低栄養</span>
-                    </div>
+                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
+                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">生活・店舗スタイル: <span id="label-store" class="text-sm text-indigo-600">自炊派（スーパー）</span></label>
+                    <input type="range" id="input-store" min="0" max="2" value="0" step="1" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
                 </div>
 
-                <div class="space-y-2">
-                    <div class="flex justify-between items-end text-xs font-bold text-slate-500">
-                        <span>投資・貯蓄率</span>
-                        <span id="display-invest" class="text-xl text-indigo-600">15<span class="text-xs ml-1">%</span></span>
-                    </div>
-                    <input type="range" id="input-invest" min="0" max="60" value="15" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none" oninput="calculate()">
+                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
+                    <label class="flex justify-between text-xs font-black text-slate-400 mb-2">投資・貯蓄率（NISA等）: <span class="text-lg text-indigo-600"><span id="val-invest">15</span>%</span></label>
+                    <input type="range" id="input-invest" min="0" max="60" value="15" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="calculate()">
                 </div>
             </div>
 
-            <!-- 結果表示カード -->
-            <div class="grid grid-cols-2 gap-3">
-                <div id="card-assets" class="bg-slate-900 p-4 rounded-3xl text-white transition-all duration-300">
-                    <p class="text-[9px] opacity-70 font-bold uppercase tracking-widest">10年後の実質資産</p>
-                    <p class="text-xl font-black mt-1" id="res-assets">¥0</p>
+            <!-- 結果パネル -->
+            <div class="grid grid-cols-2 gap-4">
+                <div id="card-assets" class="bg-slate-900 p-5 rounded-[2rem] text-white transition-all duration-500">
+                    <p class="text-[9px] opacity-60 font-bold tracking-widest">10年後の実質資産</p>
+                    <p class="text-2xl font-black mt-1" id="res-assets">¥0</p>
                 </div>
-                <div id="card-health" class="bg-emerald-500 p-4 rounded-3xl text-white transition-all duration-300">
-                    <p class="text-[9px] opacity-70 font-bold uppercase tracking-widest">推定健康寿命スコア</p>
-                    <p class="text-xl font-black mt-1"><span id="res-health">85</span><span class="text-xs ml-1 font-normal">点</span></p>
+                <div id="card-health" class="bg-emerald-500 p-5 rounded-[2rem] text-white transition-all duration-500">
+                    <p class="text-[9px] opacity-60 font-bold tracking-widest">健康寿命スコア</p>
+                    <p class="text-2xl font-black mt-1"><span id="res-health">85</span>点</p>
                 </div>
             </div>
 
-            <!-- グラフ表示 -->
-            <div class="h-40 w-full">
+            <!-- グラフ -->
+            <div class="h-44 w-full px-2">
                 <canvas id="mainChart"></canvas>
             </div>
 
             <!-- アドバイス -->
-            <div id="advice-box" class="text-xs p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-900 leading-relaxed shadow-inner">
-                ...
+            <div id="advice-box" class="text-xs p-5 rounded-3xl bg-indigo-50 border border-indigo-100 text-indigo-900 leading-relaxed font-medium">
+                計算中...
             </div>
+
+            <!-- 免責事項（アコーディオン形式） -->
+            <details class="text-[9px] text-slate-400 border-t pt-4">
+                <summary class="cursor-pointer font-bold mb-2">【免責事項（必ずお読みください）】</summary>
+                <p class="mt-1">
+                    本シミュレーターは、2026年時点の概算社会保険料率および一般的な統計データに基づいた簡易予測ツールです。算出結果は将来の運用成果や健康状態を保証するものではありません。
+                </p>
+                <ul class="list-disc pl-4 mt-1 space-y-1">
+                    <li>本結果は投資助言ではなく、特定の金融商品の勧誘を目的としたものではありません。</li>
+                    <li>健康スコアは生活習慣の傾向を示すものであり、医学的診断に代わるものではありません。</li>
+                    <li>資産運用や健康管理の最終判断は、ご自身の責任において専門家へ相談の上行ってください。</li>
+                </ul>
+            </details>
         </div>
-        
-        <div class="bg-slate-50 p-4 text-center border-t border-slate-100">
-            <p class="text-[9px] text-slate-400 font-medium">※2026年社会保険料率・期待リフレ率・将来医療費リスク反映済み</p>
+
+        <div class="bg-slate-50 py-4 text-center">
+            <p class="text-[9px] text-slate-300 font-bold">© 2026 LifeNavigator Project</p>
         </div>
     </div>
 
@@ -90,13 +89,13 @@
             mainChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['2026', '2028', '2030', '2032', '2034', '2036'],
+                    labels: ['今', '2年', '4年', '6年', '8年', '10年'],
                     datasets: [{
                         data: [],
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.05)',
                         fill: true,
-                        borderWidth: 3,
+                        borderWidth: 4,
                         tension: 0.4,
                         pointRadius: 0
                     }]
@@ -106,7 +105,7 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: { 
-                        x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } },
                         y: { display: false, beginAtZero: true }
                     }
                 }
@@ -114,81 +113,65 @@
         }
 
         function calculate() {
-            // 1. 入力値の取得
             const income = parseInt(document.getElementById('input-income').value);
             const storeMode = parseInt(document.getElementById('input-store').value);
             const investRate = parseInt(document.getElementById('input-invest').value) / 100;
 
-            // 2. 基本係数 (2026年予測値)
-            const taxRate = 0.22; // 社保・所得税等
-            const takeHome = income * (1 - taxRate);
-            const baseLivingCost = 10; // 固定費（家賃等：10万円）
+            document.getElementById('val-income').innerText = income;
+            document.getElementById('val-invest').innerText = Math.round(investRate * 100);
             
-            // 店舗スタイル別の食費・健康コスト (管理栄養士ロジック)
             const storeSettings = [
-                { name: "自炊中心（スーパー）", cost: 3.5, health: 15 },
-                { name: "混合（ドラッグストア等）", cost: 5.5, health: 5 },
-                { name: "外食・コンビニ中心", cost: 9.0, health: -15 }
+                { name: "自炊派（スーパー）", cost: 3.5, health: 15 },
+                { name: "混合派（ドラッグストア等）", cost: 5.5, health: 5 },
+                { name: "外食・コンビニ派", cost: 9.5, health: -15 }
             ];
-            
-            const selectedStore = storeSettings[storeMode];
-            const monthlyFoodCost = selectedStore.cost;
-            
-            // 3. エコノミスト・ロジック：投資余力と健康のトレードオフ
-            const maxInvestCapacity = takeHome - baseLivingCost - monthlyFoodCost;
+            document.getElementById('label-store').innerText = storeSettings[storeMode].name;
+
+            const takeHome = income * 0.78; // 手取り（2026年推計）
+            const minLifeCost = 10; // 固定費（家賃等）
+            const maxInvestCapacity = takeHome - minLifeCost - storeSettings[storeMode].cost;
             const actualMonthlyInvest = income * investRate;
-            
-            // 無理な投資による「生活崩壊」ペナルティ
+
             let healthPenalty = 0;
-            let medicalRiskCapital = 0;
+            let medicalDebt = 0;
+            let isRisk = false;
+
+            // 投資過多ペナルティロジック
             if (actualMonthlyInvest > maxInvestCapacity) {
+                isRisk = true;
                 const deficit = actualMonthlyInvest - maxInvestCapacity;
-                healthPenalty = deficit * 15; // 生活費不足による健康悪化
-                medicalRiskCapital = deficit * 50; // 将来の医療費負債
+                healthPenalty = deficit * 12; // 生活費不足によるダメージ
+                medicalDebt = deficit * 40; // 将来の医療費負債化
             }
 
-            // 4. 資産シミュレーション (年利5%想定)
             let assetsHistory = [];
             let currentBalance = 0;
             for (let i = 0; i <= 10; i++) {
                 if (i % 2 === 0) assetsHistory.push(Math.round(currentBalance));
-                currentBalance = (currentBalance + (actualMonthlyInvest * 12)) * 1.05;
+                currentBalance = (currentBalance + (actualMonthlyInvest * 12)) * 1.05; // 年利5%
             }
-            
-            // 実質資産 = 積立資産 - 将来医療リスク
-            const finalAssets = Math.max(0, Math.round(currentBalance - medicalRiskCapital));
-            const finalHealthScore = Math.max(10, Math.min(100, 75 + selectedStore.health - healthPenalty));
 
-            // 5. UI反映
-            document.getElementById('val-income').innerText = income;
-            document.getElementById('label-store').innerText = selectedStore.name;
-            document.getElementById('display-invest').innerText = Math.round(investRate * 100);
+            const finalAssets = Math.max(0, Math.round(currentBalance - medicalDebt));
+            const finalHealth = Math.max(5, Math.min(100, 75 + storeSettings[storeMode].health - healthPenalty));
+
             document.getElementById('res-assets').innerText = "¥" + finalAssets.toLocaleString() + "万";
-            document.getElementById('res-health').innerText = Math.round(finalHealthScore);
+            document.getElementById('res-health').innerText = Math.round(finalHealth);
 
-            // 警告演出
+            // アラート演出
             const cardAssets = document.getElementById('card-assets');
-            const cardHealth = document.getElementById('card-health');
-            if (actualMonthlyInvest > maxInvestCapacity) {
-                cardAssets.classList.add('bg-red-600', 'risk-flash');
-                cardAssets.classList.remove('bg-slate-900');
-                cardHealth.classList.add('bg-orange-500');
-                cardHealth.classList.remove('bg-emerald-500');
+            if (isRisk) {
+                cardAssets.classList.add('risk-mode');
             } else {
-                cardAssets.classList.remove('bg-red-600', 'risk-flash');
-                cardAssets.classList.add('bg-slate-900');
-                cardHealth.classList.remove('bg-orange-500');
-                cardHealth.classList.add('bg-emerald-500');
+                cardAssets.classList.remove('risk-mode');
             }
 
-            // アドバイス生成
             const advice = document.getElementById('advice-box');
-            if (actualMonthlyInvest > maxInvestCapacity) {
-                advice.innerHTML = "🚨 <strong>投資過多の警告:</strong> 生活費が不足しています。健康を犠牲にした投資は、将来の医療費で全て消失します。投資率を下げてください。";
+            if (isRisk) {
+                advice.innerHTML = "🚨 <strong>警告: 投資のやりすぎです</strong><br>現在の投資率は生活を圧迫しています。健康を損なうと、将来的に約" + Math.round(medicalDebt) + "万円の医療費が発生するリスクがあります。";
             } else if (storeMode === 2) {
-                advice.innerHTML = "⚠️ <strong>健康リスク:</strong> コンビニ中心の生活は、自炊派に比べ10年で約" + ((storeSettings[2].cost - storeSettings[0].cost)*120).toFixed(0) + "万円の損失です。";
+                advice.innerHTML = "⚠️ <strong>店舗戦略の見直しを</strong><br>コンビニ中心の生活は資産形成を月約6万円阻害しています。週3回スーパーに変えるだけで、10年後の資産はさらに伸びます。";
             } else {
-                advice.innerHTML = "✨ <strong>黄金バランス:</strong> 適切な生活水準と投資が両立されています。今のスーパーを拠点にした生活が最強の資産です。";
+                advice.innerHTML = "✨ <strong>理想的なバランスです</strong><br>2026年の厳しい経済下でも、健康と資産を両立できる最強の設定です。この習慣を継続しましょう！";
             }
 
             if (mainChart) {
