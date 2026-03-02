@@ -8,121 +8,127 @@
     <script src="https://cdn.jsdelivr.net"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 p-4">
-    <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl p-6 space-y-6">
-        <h1 class="text-xl font-bold text-indigo-700 text-center">LifeNavigator 2026</h1>
+    <div class="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-6 space-y-6 border border-slate-100">
+        <h1 class="text-xl font-black text-indigo-700 text-center tracking-tight">LifeNavigator 2026</h1>
 
         <!-- 入力エリア -->
-        <div class="space-y-4">
-            <div>
-                <label class="flex justify-between text-sm mb-1">月収: <span id="val-income" class="font-bold">30</span>万円</label>
-                <input type="range" id="input-income" min="15" max="100" value="30" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
+        <div class="space-y-5">
+            <div class="bg-slate-50 p-3 rounded-2xl">
+                <label class="flex justify-between text-xs font-bold mb-2 text-slate-500">月収（総支給）: <span id="val-income" class="text-lg text-indigo-600">30</span><span class="text-xs text-indigo-600">万円</span></label>
+                <input type="range" id="input-income" min="15" max="100" value="30" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="calculate()">
             </div>
-            <div>
-                <label class="flex justify-between text-sm mb-1">スタイル: <span id="label-store" class="font-bold text-indigo-600">自炊派</span></label>
-                <input type="range" id="input-store" min="0" max="2" value="0" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
+            <div class="bg-slate-50 p-3 rounded-2xl">
+                <label class="flex justify-between text-xs font-bold mb-2 text-slate-500">店舗・生活スタイル: <span id="label-store" class="text-sm text-indigo-600">自炊派（スーパー）</span></label>
+                <input type="range" id="input-store" min="0" max="2" value="0" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="calculate()">
             </div>
-            <div>
-                <label class="flex justify-between text-sm mb-1">投資率: <span id="val-invest" class="font-bold">10</span>%</label>
-                <input type="range" id="input-invest" min="0" max="50" value="10" class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" oninput="update()">
-            </div>
-        </div>
-
-        <!-- 結果エリア -->
-        <div class="grid grid-cols-2 gap-4 text-center">
-            <div class="bg-indigo-50 p-3 rounded-xl">
-                <p class="text-[10px] text-indigo-600 font-bold">10年後の資産</p>
-                <p class="text-lg font-black" id="res-assets">¥0</p>
-            </div>
-            <div class="bg-emerald-50 p-3 rounded-xl">
-                <p class="text-[10px] text-emerald-600 font-bold">健康寿命スコア</p>
-                <p class="text-lg font-black" id="res-health">0</p>
+            <div class="bg-slate-50 p-3 rounded-2xl">
+                <label class="flex justify-between text-xs font-bold mb-2 text-slate-500">投資に回す割合: <span id="val-invest" class="text-lg text-indigo-600">10</span><span class="text-xs text-indigo-600">%</span></label>
+                <input type="range" id="input-invest" min="0" max="50" value="10" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="calculate()">
             </div>
         </div>
 
-        <!-- グラフエリア -->
-        <div style="height: 200px; position: relative;">
+        <!-- 結果表示 -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-indigo-600 text-white p-4 rounded-2xl shadow-lg">
+                <p class="text-[10px] opacity-80 font-bold">10年後の資産増</p>
+                <p class="text-xl font-black" id="res-assets">¥0</p>
+            </div>
+            <div class="bg-emerald-500 text-white p-4 rounded-2xl shadow-lg">
+                <p class="text-[10px] opacity-80 font-bold">推定健康スコア</p>
+                <p class="text-xl font-black"><span id="res-health">80</span>点</p>
+            </div>
+        </div>
+
+        <!-- グラフ -->
+        <div style="height: 180px;">
             <canvas id="growthChart"></canvas>
         </div>
 
-        <div id="advice-box" class="text-xs p-4 rounded-xl bg-slate-800 text-white leading-relaxed">
-            計算中...
+        <div id="advice-box" class="text-xs p-4 rounded-2xl bg-slate-900 text-slate-200 leading-relaxed shadow-inner">
+            スライダーを動かして未来を予測しましょう。
         </div>
     </div>
 
     <script>
-        let growthChart = null;
+        let myChart = null;
 
         function initChart() {
             const ctx = document.getElementById('growthChart').getContext('2d');
-            growthChart = new Chart(ctx, {
+            myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['今', '2年', '4年', '6年', '8年', '10年'],
                     datasets: [{
-                        label: '資産推移',
                         data: [0, 0, 0, 0, 0, 0],
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.1)',
                         fill: true,
-                        tension: 0.3
+                        tension: 0.4,
+                        pointRadius: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true } }
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
         }
 
-        function update() {
-            if (!growthChart) return;
-
-            // 値の取得
+        function calculate() {
+            // 入力値の取得
             const income = parseInt(document.getElementById('input-income').value);
             const storeMode = parseInt(document.getElementById('input-store').value);
             const investRate = parseInt(document.getElementById('input-invest').value) / 100;
 
-            // 表示更新
+            // ラベル更新
             document.getElementById('val-income').innerText = income;
             document.getElementById('val-invest').innerText = Math.round(investRate * 100);
+            
+            const storeLabels = ["自炊派（スーパー）", "混合派（ドラッグストア等）", "外食・コンビニ派"];
+            document.getElementById('label-store').innerText = storeLabels[storeMode];
 
-            // 1. FPロジック
-            const takeHome = income * 0.8; // 手取り約8割と仮定
-            let storeCost = [5, 8, 12][storeMode]; // 万
-            let storeLabel = ["自炊派", "混合派", "外食・コンビニ派"][storeMode];
-            document.getElementById('label-store').innerText = storeLabel;
-
-            // 2. 資産計算
-            const monthlyInvest = takeHome * investRate;
-            let currentAssets = 0;
-            let chartData = [];
-            for (let i = 0; i <= 10; i++) {
-                if (i % 2 === 0) chartData.push(Math.round(currentAssets));
-                currentAssets = (currentAssets + (monthlyInvest * 12)) * 1.05; // 年利5%
+            // 1. FPロジック：手取り（2026年想定）と投資余力の計算
+            const takeHome = income * 0.78; // 社会保険・税金
+            const storeCosts = [4, 7, 10]; // 店舗形態別の月間食費コスト（単位：万円）
+            const monthlyInvest = (takeHome - storeCosts[storeMode]) * investRate;
+            
+            // 2. 資産推移（年利5%想定）
+            let assetsOverTime = [];
+            let currentBalance = 0;
+            for (let year = 0; year <= 10; year++) {
+                if (year % 2 === 0) assetsOverTime.push(Math.round(currentBalance));
+                currentBalance = (currentBalance + (Math.max(0, monthlyInvest) * 12)) * 1.05;
             }
 
-            // 3. UI反映
-            document.getElementById('res-assets').innerText = "¥" + Math.round(currentAssets).toLocaleString() + "万";
-            document.getElementById('res-health').innerText = [82, 79, 74][storeMode] + " 歳";
+            // 3. 管理栄養士ロジック：健康寿命スコア
+            const healthScores = [92, 75, 58];
+            document.getElementById('res-health').innerText = healthScores[storeMode];
+            document.getElementById('res-assets').innerText = "¥" + Math.round(currentBalance).toLocaleString() + "万";
 
-            // グラフ更新
-            growthChart.data.datasets[0].data = chartData;
-            growthChart.update();
+            // グラフとアドバイスの更新
+            if (myChart) {
+                myChart.data.datasets[0].data = assetsOverTime;
+                myChart.update();
+            }
 
-            // アドバイス
             const advice = document.getElementById('advice-box');
-            if(storeMode === 2) {
-                advice.innerText = "⚠️コンビニ中心だと食費が月約" + storeCost + "万円かかり、健康寿命も低下傾向です。週2回自炊にするだけで投資余力が生まれます。";
+            if (storeMode === 2) {
+                advice.innerHTML = "<span class='text-red-400'>⚠️警告:</span> コンビニ中心は食費を月" + (storeCosts[2] - storeCosts[0]) + "万円押し上げ、資産形成を阻害します。";
+            } else if (investRate < 0.05) {
+                advice.innerHTML = "💡ヒント: 投資率をあと5%上げるだけで、10年後はさらに大きな資産になります。";
             } else {
-                advice.innerText = "✅効率的な資産形成です。このペースを維持すれば、10年後には強力なセーフティネットが完成します。";
+                advice.innerHTML = "✨理想的: 節約と投資、健康のバランスが取れています。この習慣を継続しましょう。";
             }
         }
 
-        // 初期化
         window.onload = () => {
             initChart();
-            update();
+            calculate();
         };
     </script>
 </body>
